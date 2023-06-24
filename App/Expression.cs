@@ -3,6 +3,7 @@ namespace App
 
     public interface IExpression
     {
+        public IExpression Times(int multiplier);
         public IExpression Plus(IExpression addend);
         public Money Reduce(Bank bank, string to);
     }
@@ -19,6 +20,11 @@ namespace App
             Addend = addend;
         }
 
+        public IExpression Times(int multiplier)
+        {
+            return new Sum(this.Augend.Times(multiplier), this.Addend.Times(multiplier));
+        }
+
         public IExpression Plus(IExpression addend)
         {
             return new Sum(this, addend);
@@ -28,6 +34,7 @@ namespace App
             var amount = Augend.Reduce(bank, to).Amount + Addend.Reduce(bank, to).Amount;
             return new Money(amount, to);
         }
+
     }
 
 }
