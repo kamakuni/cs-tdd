@@ -1,4 +1,4 @@
-namespace App.Tests
+namespace Currency.Tests
 {
     public class MoneyTest
     {

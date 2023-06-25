@@ -1,4 +1,4 @@
-namespace App
+namespace Currency
 {
 
     public class Bank

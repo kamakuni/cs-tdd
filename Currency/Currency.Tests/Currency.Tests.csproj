@@ -22,7 +22,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\App\App.csproj" />
+    <ProjectReference Include="..\Currency\Currency.csproj" />
   </ItemGroup>
 
 </Project>
+s
