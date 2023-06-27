@@ -20,10 +20,16 @@ namespace XUnit
     public class Runner : TestCase
     {
         public bool WasRun { get; set; }
+        public bool WasSetUp { get; set; }
 
         public Runner(string name) : base(name)
         {
             this.WasRun = false;
+        }
+
+        public void SetUp()
+        {
+            this.WasSetUp = true;
         }
 
         public void Method()
@@ -58,6 +64,13 @@ namespace XUnit
             this.Assert(false, test.WasRun);
             test.Run();
             this.Assert(true, test.WasRun);
+        }
+
+        public void TestSetUp()
+        {
+            var test = new XUnit.Runner("Method");
+            test.Run();
+            this.Assert(true, test.WasSetUp);
         }
     }
 }
