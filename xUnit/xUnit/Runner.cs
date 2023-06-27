@@ -1,20 +1,29 @@
 namespace XUnit
 {
-    public class Runner
+
+    public class TestCase
     {
         public string Name { get; }
-        public bool WasRun { get; set; }
-
-        public Runner(string name)
+        public TestCase(string name)
         {
             this.Name = name;
-            this.WasRun = false;
         }
 
         public void Run()
         {
-            var m = typeof(Runner).GetMethod("Method");
+            //Console.WriteLine(this.GetType());
+            var m = this.GetType().GetMethod(this.Name);
             m.Invoke(this, null);
+        }
+
+    }
+    public class Runner : TestCase
+    {
+        public bool WasRun { get; set; }
+
+        public Runner(string name) : base(name)
+        {
+            this.WasRun = false;
         }
 
         public void Method()
