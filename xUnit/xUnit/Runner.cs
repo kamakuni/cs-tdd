@@ -31,4 +31,33 @@ namespace XUnit
             this.WasRun = true;
         }
     }
+
+    class TestCaseTest : TestCase
+    {
+        public TestCaseTest(string name) : base(name)
+        {
+
+        }
+
+        private void Assert(bool expected, bool actual)
+        {
+            if (expected != actual)
+            {
+                Console.WriteLine("Failed");
+                throw new Exception();
+            }
+            else
+            {
+                Console.WriteLine("Passed");
+            }
+        }
+
+        public void TestRunning()
+        {
+            var test = new XUnit.Runner("Method");
+            this.Assert(false, test.WasRun);
+            test.Run();
+            this.Assert(true, test.WasRun);
+        }
+    }
 }
