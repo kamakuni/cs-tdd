@@ -1,2 +1,2 @@
-﻿var tct = new XUnit.TestCaseTest("TestRunning");
-tct.Run();
+﻿new XUnit.TestCaseTest("TestRunning").Run();
+new XUnit.TestCaseTest("TestSetUp").Run();

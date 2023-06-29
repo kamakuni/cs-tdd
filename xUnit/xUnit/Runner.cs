@@ -1,51 +1,19 @@
 namespace XUnit
 {
 
-    public class TestCase
+    public abstract class TestCase
     {
         public string Name { get; }
+        public bool WasRun { get; set; }
+        public bool WasSetUp { get; set; }
+
         public TestCase(string name)
         {
             this.Name = name;
         }
 
-        public void Run()
-        {
-            //Console.WriteLine(this.GetType());
-            var m = this.GetType().GetMethod(this.Name);
-            m.Invoke(this, null);
-        }
-
-    }
-    public class Runner : TestCase
-    {
-        public bool WasRun { get; set; }
-        public bool WasSetUp { get; set; }
-
-        public Runner(string name) : base(name)
-        {
-            this.WasRun = false;
-        }
-
-        public void SetUp()
-        {
-            this.WasSetUp = true;
-        }
-
-        public void Method()
-        {
-            this.WasRun = true;
-        }
-    }
-
-    class TestCaseTest : TestCase
-    {
-        public TestCaseTest(string name) : base(name)
-        {
-
-        }
-
-        private void Assert(bool expected, bool actual)
+        public abstract void SetUp();
+        protected void Assert(bool expected, bool actual)
         {
             if (expected != actual)
             {
@@ -58,19 +26,56 @@ namespace XUnit
             }
         }
 
+        public void Run()
+        {
+            this.SetUp();
+            var m = this.GetType().GetMethod(this.Name);
+            m.Invoke(this, null);
+        }
+
+    }
+    public class WasRunClass : TestCase
+    {
+
+        public WasRunClass(string name) : base(name)
+        {
+        }
+        public override void SetUp()
+        {
+            this.WasRun = false;
+            this.WasSetUp = true;
+        }
+
+        public void TestMethod()
+        {
+            this.WasRun = true;
+        }
+    }
+
+    class TestCaseTest : TestCase
+    {
+        public TestCase Test { get; set; }
+        public TestCaseTest(string name) : base(name)
+        {
+
+        }
+
+        public override void SetUp()
+        {
+            // This is a Fixture
+            this.Test = new WasRunClass("TestMethod");
+        }
+
         public void TestRunning()
         {
-            var test = new XUnit.Runner("Method");
-            this.Assert(false, test.WasRun);
-            test.Run();
-            this.Assert(true, test.WasRun);
+            this.Test.Run();
+            this.Assert(true, this.Test.WasRun);
         }
 
         public void TestSetUp()
         {
-            var test = new XUnit.Runner("Method");
-            test.Run();
-            this.Assert(true, test.WasSetUp);
+            this.Test.Run();
+            this.Assert(true, this.Test.WasSetUp);
         }
     }
 }
