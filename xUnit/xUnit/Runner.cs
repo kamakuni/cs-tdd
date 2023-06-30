@@ -3,9 +3,9 @@ namespace XUnit
 
     public abstract class TestCase
     {
+        public string Log { get; set; }
         public string Name { get; }
         public bool WasRun { get; set; }
-        public bool WasSetUp { get; set; }
 
         public TestCase(string name)
         {
@@ -13,7 +13,7 @@ namespace XUnit
         }
 
         public abstract void SetUp();
-        protected void Assert(bool expected, bool actual)
+        protected void AssertEqual(bool expected, bool actual)
         {
             if (expected != actual)
             {
@@ -25,7 +25,18 @@ namespace XUnit
                 Console.WriteLine("Passed");
             }
         }
-
+        protected void AssertEqual(string expected, string actual)
+        {
+            if (expected != actual)
+            {
+                Console.WriteLine("Failed");
+                throw new Exception();
+            }
+            else
+            {
+                Console.WriteLine("Passed");
+            }
+        }
         public void Run()
         {
             this.SetUp();
@@ -43,7 +54,7 @@ namespace XUnit
         public override void SetUp()
         {
             this.WasRun = false;
-            this.WasSetUp = true;
+            this.Log = "SetUp";
         }
 
         public void TestMethod()
@@ -69,13 +80,13 @@ namespace XUnit
         public void TestRunning()
         {
             this.Test.Run();
-            this.Assert(true, this.Test.WasRun);
+            this.AssertEqual(true, this.Test.WasRun);
         }
 
         public void TestSetUp()
         {
             this.Test.Run();
-            this.Assert(true, this.Test.WasSetUp);
+            this.AssertEqual("SetUp", this.Test.Log);
         }
     }
 }
