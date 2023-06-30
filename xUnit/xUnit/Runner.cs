@@ -54,12 +54,13 @@ namespace XUnit
         public override void SetUp()
         {
             this.WasRun = false;
-            this.Log = "SetUp";
+            this.Log = "SetUp ";
         }
 
         public void TestMethod()
         {
             this.WasRun = true;
+            this.Log += "TestMethod ";
         }
     }
 
@@ -77,16 +78,10 @@ namespace XUnit
             this.Test = new WasRunClass("TestMethod");
         }
 
-        public void TestRunning()
+        public void TestTemplateMethod()
         {
             this.Test.Run();
-            this.AssertEqual(true, this.Test.WasRun);
-        }
-
-        public void TestSetUp()
-        {
-            this.Test.Run();
-            this.AssertEqual("SetUp", this.Test.Log);
+            this.AssertEqual("SetUp TestMethod ", this.Test.Log);
         }
     }
 }
