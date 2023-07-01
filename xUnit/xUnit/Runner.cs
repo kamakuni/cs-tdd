@@ -5,7 +5,6 @@ namespace XUnit
     {
         public string Log { get; set; }
         public string Name { get; }
-        public bool WasRun { get; set; }
 
         public TestCase(string name)
         {
@@ -45,43 +44,39 @@ namespace XUnit
         }
 
     }
-    public class WasRunClass : TestCase
+    public class WasRun : TestCase
     {
 
-        public WasRunClass(string name) : base(name)
+        public WasRun(string name) : base(name)
         {
         }
         public override void SetUp()
         {
-            this.WasRun = false;
             this.Log = "SetUp ";
         }
 
         public void TestMethod()
         {
-            this.WasRun = true;
             this.Log += "TestMethod ";
         }
     }
 
     class TestCaseTest : TestCase
     {
-        public TestCase Test { get; set; }
         public TestCaseTest(string name) : base(name)
         {
 
         }
-
         public override void SetUp()
         {
-            // This is a Fixture
-            this.Test = new WasRunClass("TestMethod");
+            this.Log = "SetUp ";
         }
-
         public void TestTemplateMethod()
         {
-            this.Test.Run();
-            this.AssertEqual("SetUp TestMethod ", this.Test.Log);
+            // This is a Fixture
+            var test = new WasRun("TestMethod");
+            test.Run();
+            this.AssertEqual("SetUp TestMethod ", test.Log);
         }
     }
 }
