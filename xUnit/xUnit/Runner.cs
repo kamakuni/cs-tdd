@@ -1,6 +1,14 @@
 namespace XUnit
 {
 
+    public class TestResult
+    {
+        public string Summary()
+        {
+            return "1 run, 0 failed";
+        }
+    }
+
     public class TestCase
     {
         public string Log { get; set; }
@@ -36,12 +44,13 @@ namespace XUnit
                 Console.WriteLine("Passed");
             }
         }
-        public void Run()
+        public TestResult Run()
         {
             this.SetUp();
             var m = this.GetType().GetMethod(this.Name);
             m.Invoke(this, null);
             this.TearDown();
+            return new TestResult();
         }
 
     }
@@ -79,6 +88,12 @@ namespace XUnit
             var test = new WasRun("TestMethod");
             test.Run();
             this.AssertEqual("SetUp TestMethod TearDown ", test.Log);
+        }
+        public void TestResult()
+        {
+            var test = new WasRun("TestMethod");
+            var result = test.Run();
+            this.AssertEqual("1 run, 0 failed", result.Summary());
         }
     }
 }
