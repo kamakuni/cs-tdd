@@ -1,7 +1,7 @@
 namespace XUnit
 {
 
-    public abstract class TestCase
+    public class TestCase
     {
         public string Log { get; set; }
         public string Name { get; }
@@ -10,8 +10,8 @@ namespace XUnit
         {
             this.Name = name;
         }
-
-        public abstract void SetUp();
+        public virtual void SetUp() { }
+        public virtual void TearDown() { }
         protected void AssertEqual(bool expected, bool actual)
         {
             if (expected != actual)
@@ -41,6 +41,7 @@ namespace XUnit
             this.SetUp();
             var m = this.GetType().GetMethod(this.Name);
             m.Invoke(this, null);
+            this.TearDown();
         }
 
     }
@@ -59,6 +60,11 @@ namespace XUnit
         {
             this.Log += "TestMethod ";
         }
+
+        public override void TearDown()
+        {
+            this.Log += "TearDown ";
+        }
     }
 
     class TestCaseTest : TestCase
@@ -67,16 +73,12 @@ namespace XUnit
         {
 
         }
-        public override void SetUp()
-        {
-            this.Log = "SetUp ";
-        }
         public void TestTemplateMethod()
         {
             // This is a Fixture
             var test = new WasRun("TestMethod");
             test.Run();
-            this.AssertEqual("SetUp TestMethod ", test.Log);
+            this.AssertEqual("SetUp TestMethod TearDown ", test.Log);
         }
     }
 }
