@@ -3,9 +3,14 @@ namespace XUnit
 
     public class TestResult
     {
+        private int RunCount { set; get; } = 0;
+        public void TestStarted()
+        {
+            RunCount += 1;
+        }
         public string Summary()
         {
-            return "1 run, 0 failed";
+            return $"{RunCount} run, 0 failed";
         }
     }
 
@@ -47,10 +52,12 @@ namespace XUnit
         public TestResult Run()
         {
             this.SetUp();
+            var result = new TestResult();
+            result.TestStarted();
             var m = this.GetType().GetMethod(this.Name);
             m.Invoke(this, null);
             this.TearDown();
-            return new TestResult();
+            return result;
         }
 
     }
