@@ -4,13 +4,18 @@ namespace XUnit
     public class TestResult
     {
         private int RunCount { set; get; } = 0;
+        private int ErrorCount { set; get; } = 0;
         public void TestStarted()
         {
             RunCount += 1;
         }
+        public void TestFailed()
+        {
+            ErrorCount += 1;
+        }
         public string Summary()
         {
-            return $"{RunCount} run, 0 failed";
+            return $"{RunCount} run, {ErrorCount} failed";
         }
     }
 
@@ -54,8 +59,15 @@ namespace XUnit
             this.SetUp();
             var result = new TestResult();
             result.TestStarted();
-            var m = this.GetType().GetMethod(this.Name);
-            m.Invoke(this, null);
+            try
+            {
+                var m = this.GetType().GetMethod(this.Name);
+                m.Invoke(this, null);
+            }
+            catch (Exception e)
+            {
+                result.TestFailed();
+            }
             this.TearDown();
             return result;
         }
@@ -77,6 +89,10 @@ namespace XUnit
             this.Log += "TestMethod ";
         }
 
+        public void TestBrokenMethod()
+        {
+            throw new Exception();
+        }
         public override void TearDown()
         {
             this.Log += "TearDown ";
@@ -101,6 +117,21 @@ namespace XUnit
             var test = new WasRun("TestMethod");
             var result = test.Run();
             this.AssertEqual("1 run, 0 failed", result.Summary());
+        }
+
+        public void TestFailedResult()
+        {
+            var test = new WasRun("TestMethod");
+            var result = test.Run();
+            this.AssertEqual("1 run, 1 failed", result.Summary());
+        }
+
+        public void TestFailedResultFormatting()
+        {
+            var result = new TestResult();
+            result.TestStarted();
+            result.TestFailed();
+            this.AssertEqual("1 run, 1 failed", result.Summary());
         }
     }
 }
