@@ -99,6 +99,22 @@ namespace XUnit
         }
     }
 
+    class TestSuite
+    {
+
+        private List<TestCase> Tests { get; set; } = new List<TestCase>();
+        public void Add(TestCase test)
+        {
+            Tests.Add(test);
+        }
+
+        public TestResult Run()
+        {
+            Tests.ForEach(t => t.Run());
+            return new TestResult();
+        }
+    }
+
     class TestCaseTest : TestCase
     {
         public TestCaseTest(string name) : base(name)
@@ -132,6 +148,15 @@ namespace XUnit
             result.TestStarted();
             result.TestFailed();
             this.AssertEqual("1 run, 1 failed", result.Summary());
+        }
+
+        public void TestTestSuite()
+        {
+            var suite = new TestSuite();
+            suite.Add(new WasRun("testMethod"));
+            suite.Add(new WasRun("testBrokenMethod"));
+            var result = suite.Run();
+            this.AssertEqual("2 run, 1 failed", result.Summary());
         }
     }
 }
