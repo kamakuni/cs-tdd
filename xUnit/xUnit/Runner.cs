@@ -54,10 +54,9 @@ namespace XUnit
                 Console.WriteLine("Passed");
             }
         }
-        public TestResult Run()
+        public void Run(TestResult result)
         {
             this.SetUp();
-            var result = new TestResult();
             result.TestStarted();
             try
             {
@@ -69,7 +68,6 @@ namespace XUnit
                 result.TestFailed();
             }
             this.TearDown();
-            return result;
         }
 
     }
@@ -108,10 +106,9 @@ namespace XUnit
             Tests.Add(test);
         }
 
-        public TestResult Run()
+        public void Run(TestResult result)
         {
-            Tests.ForEach(t => t.Run());
-            return new TestResult();
+            Tests.ForEach(t => t.Run(result));
         }
     }
 
@@ -125,20 +122,23 @@ namespace XUnit
         {
             // This is a Fixture
             var test = new WasRun("TestMethod");
-            test.Run();
+            var result = new TestResult();
+            test.Run(result);
             this.AssertEqual("SetUp TestMethod TearDown ", test.Log);
         }
         public void TestResult()
         {
             var test = new WasRun("TestMethod");
-            var result = test.Run();
+            var result = new TestResult();
+            test.Run(result);
             this.AssertEqual("1 run, 0 failed", result.Summary());
         }
 
         public void TestFailedResult()
         {
             var test = new WasRun("TestMethod");
-            var result = test.Run();
+            var result = new TestResult();
+            test.Run(result);
             this.AssertEqual("1 run, 1 failed", result.Summary());
         }
 
@@ -155,7 +155,8 @@ namespace XUnit
             var suite = new TestSuite();
             suite.Add(new WasRun("testMethod"));
             suite.Add(new WasRun("testBrokenMethod"));
-            var result = suite.Run();
+            var result = new TestResult();
+            suite.Run(result);
             this.AssertEqual("2 run, 1 failed", result.Summary());
         }
     }
