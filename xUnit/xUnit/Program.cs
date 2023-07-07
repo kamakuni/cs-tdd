@@ -1,5 +1,4 @@
 ﻿using XUnit;
-
 var suite = new TestSuite();
 suite.Add(new TestCaseTest("TestTemplateMethod"));
 suite.Add(new TestCaseTest("TestResult"));

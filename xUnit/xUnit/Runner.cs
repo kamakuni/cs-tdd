@@ -21,8 +21,10 @@ namespace XUnit
 
     public class TestCase
     {
-        public string Log { get; set; }
+        public string Log { get; set; } = "";
         public string Name { get; }
+
+        protected TestResult Result { get; set; } = null!;
 
         public TestCase(string name)
         {
@@ -118,36 +120,37 @@ namespace XUnit
         {
 
         }
+        public override void SetUp()
+        {
+            this.Result = new TestResult();
+        }
+
         public void TestTemplateMethod()
         {
             // This is a Fixture
             var test = new WasRun("TestMethod");
-            var result = new TestResult();
-            test.Run(result);
+            test.Run(this.Result);
             this.AssertEqual("SetUp TestMethod TearDown ", test.Log);
         }
         public void TestResult()
         {
             var test = new WasRun("TestMethod");
-            var result = new TestResult();
-            test.Run(result);
-            this.AssertEqual("1 run, 0 failed", result.Summary());
+            test.Run(this.Result);
+            this.AssertEqual("1 run, 0 failed", this.Result.Summary());
         }
 
         public void TestFailedResult()
         {
             var test = new WasRun("TestMethod");
-            var result = new TestResult();
-            test.Run(result);
-            this.AssertEqual("1 run, 1 failed", result.Summary());
+            test.Run(this.Result);
+            this.AssertEqual("1 run, 1 failed", this.Result.Summary());
         }
 
         public void TestFailedResultFormatting()
         {
-            var result = new TestResult();
-            result.TestStarted();
-            result.TestFailed();
-            this.AssertEqual("1 run, 1 failed", result.Summary());
+            this.Result.TestStarted();
+            this.Result.TestFailed();
+            this.AssertEqual("1 run, 1 failed", this.Result.Summary());
         }
 
         public void TestTestSuite()
@@ -155,9 +158,8 @@ namespace XUnit
             var suite = new TestSuite();
             suite.Add(new WasRun("testMethod"));
             suite.Add(new WasRun("testBrokenMethod"));
-            var result = new TestResult();
-            suite.Run(result);
-            this.AssertEqual("2 run, 1 failed", result.Summary());
+            suite.Run(this.Result);
+            this.AssertEqual("2 run, 1 failed", this.Result.Summary());
         }
     }
 }
