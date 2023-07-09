@@ -174,8 +174,8 @@ namespace XUnit
         public void TestTestSuite()
         {
             var suite = new TestSuite();
-            suite.Add(new WasRun("testMethod"));
-            suite.Add(new WasRun("testBrokenMethod"));
+            suite.Add(new WasRun("TestMethod"));
+            suite.Add(new WasRun("TestBrokenMethod"));
             suite.Run(this.Result);
             this.AssertEqual("2 run, 1 failed", this.Result.Summary());
         }
