@@ -132,6 +132,14 @@ namespace XUnit
             test.Run(this.Result);
             this.AssertEqual("SetUp TestMethod TearDown ", test.Log);
         }
+
+        public void TestTearDownWhenFailed()
+        {
+            var test = new WasRun("testBrokenMethod");
+            test.Run(this.Result);
+            this.AssertEqual("SetUp TearDown ", test.Log);
+        }
+
         public void TestResult()
         {
             var test = new WasRun("TestMethod");
