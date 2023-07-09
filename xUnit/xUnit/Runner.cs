@@ -13,6 +13,7 @@ namespace XUnit
         {
             ErrorCount += 1;
         }
+
         public string Summary()
         {
             return $"{RunCount} run, {ErrorCount} failed";
@@ -58,7 +59,16 @@ namespace XUnit
         }
         public void Run(TestResult result)
         {
-            this.SetUp();
+            try
+            {
+                this.SetUp();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                result.TestFailed();
+                return;
+            }
             result.TestStarted();
             try
             {
@@ -169,5 +179,7 @@ namespace XUnit
             suite.Run(this.Result);
             this.AssertEqual("2 run, 1 failed", this.Result.Summary());
         }
+
     }
+
 }
