@@ -59,6 +59,7 @@ namespace XUnit
         }
         public void Run(TestResult result)
         {
+            result.TestStarted();
             try
             {
                 this.SetUp();
@@ -69,7 +70,6 @@ namespace XUnit
                 result.TestFailed();
                 return;
             }
-            result.TestStarted();
             try
             {
                 var m = this.GetType().GetMethod(this.Name);
@@ -171,6 +171,13 @@ namespace XUnit
             this.AssertEqual("1 run, 1 failed", this.Result.Summary());
         }
 
+        public void TestSetUpWithException()
+        {
+            var test = new WasRunBrokenSetUp("TestNothing");
+            test.Run(this.Result);
+            this.AssertEqual("1 run, 1 failed", this.Result.Summary());
+        }
+
         public void TestTestSuite()
         {
             var suite = new TestSuite();
@@ -180,6 +187,23 @@ namespace XUnit
             this.AssertEqual("2 run, 1 failed", this.Result.Summary());
         }
 
+    }
+
+    class WasRunBrokenSetUp : TestCase
+    {
+        public WasRunBrokenSetUp(string name) : base(name)
+        {
+
+        }
+        public override void SetUp()
+        {
+            throw new Exception("SetUp is broken");
+        }
+
+        public void TestNothing()
+        {
+            Console.WriteLine("Nothing");
+        }
     }
 
 }

@@ -6,6 +6,7 @@ suite.Add(new TestCaseTest("TestFailedResult"));
 suite.Add(new TestCaseTest("TestFailedResultFormatting"));
 suite.Add(new TestCaseTest("TestTestSuite"));
 suite.Add(new TestCaseTest("TestTearDownWhenFailed"));
+suite.Add(new TestCaseTest("TestSetUpWithException"));
 var result = new TestResult();
 suite.Run(result);
 Console.WriteLine(result.Summary());
